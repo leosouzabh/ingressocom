@@ -1,0 +1,37 @@
+body {
+	background-color: #333;
+}
+a:link, a:visited,  a:hover, a:active
+{
+    color: #000000;
+    text-decoration: none;
+}
+.movie-thumb{
+	height:200px
+}
+.movie-label{
+	font: 12px verdana;
+}
+.movie-card {
+	margin-top: 10px;
+}
+
+.dates-bar{
+	width: 50%;
+}
+.date{
+	color:#09f !important;
+}
+.date-active {
+	font-weight: bold;
+	text-decoration: none !important;
+	color: #ff7300 !important;	
+}
+.dates-container{
+	width: 100%;
+	background-color: #252525;
+	text-transform: uppercase;
+}
+.date-available{
+	text-align: center;
+}

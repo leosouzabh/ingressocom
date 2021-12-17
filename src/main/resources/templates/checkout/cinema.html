@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}">
+
+	<body>
+		<div layout:fragment="content">
+			<div class="dates-container">
+				<table  class="dates-bar">
+					<tr>
+						<td th:each="date : ${dates.list}">
+							<div class="date-available">
+								<a th:href="@{/checkout(date=${date.dayMonth}, movie=${movie.id})}" th:class="${date.active ? 'date-active' : 'date'}">
+									<div th:text="${date.dayOfWeek}">Wed</div>
+									<div th:text="${date.dayMonth}">12/12</div>
+								</a>
+							</div>
+						</td>
+					</tr>		
+				</table>
+			</div>
+		</div>
+	</body>
+
+</html>
