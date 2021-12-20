@@ -16,8 +16,37 @@
 							</div>
 						</td>
 					</tr>		
+					
+					
+					
 				</table>
+				
+				<!-- screenAndTimes 
+				<tr th:each="instance : ${screenAndTimes.instanceMap}">
+				    <td th:text="${instance.key}">keyvalue</td>
+				    <td th:text="${instance.value.numOfData}">num</td>
+				</tr>
+				-->
+				
 			</div>
+			<div class="cinema-screen" th:each="cinema : ${screenAndTimes}">
+				<div th:text="${cinema.key.name}" class="name">Cinema Name</div>
+				<div class="address">Cinema Address</div>
+				<hr class="line" size="4"/>
+				
+				<div class="item" th:each="screen : ${cinema.value}">
+					<div th:text="${screen.key.name}" class="screen">Screen 01</div>
+					<div class="d-flex justify-content-start">
+						<div th:each="showing : ${screen.value}" class="p-2 time">
+							<a th:href="@{/checkout/seat(showing=${showing.id}, date=${param.date})}" style="color:#09f">
+								<span th:text="${showing.time}">10:00</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
 		</div>
 	</body>
 

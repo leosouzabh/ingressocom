@@ -57,5 +57,8 @@ public class Screen {
     public void setCinema(Cinema cinema) {
         this.cinema = cinema;
     }
-    
+    @Override
+    public String toString() {
+        return "SCREEN=["+this.getName()+"]";
+    }
 }

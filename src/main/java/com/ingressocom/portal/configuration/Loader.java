@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -30,11 +32,11 @@ public class Loader {
         return (args) -> {
             
             List<Cinema> cinemas = saveCinema("ODEON Naas","ODEON Newsbridge");
-            Iterator<Cinema> itCinema = cinemas.iterator();
-            saveData("Clifford: O Gigante Cão Vermelho", "a.jpg", itCinema.next());
-            saveData("Homem-Aranha: Sem Volta para Casa", "b.jpg", itCinema.next());
-            saveData("Resident Evil: Bem-vindo a Raccoon City", "c.jpg", itCinema.next());
-            saveData("Eternos", "d.jpg", itCinema.next());
+            
+            saveData("Clifford: O Gigante Cão Vermelho", "a.jpg", cinemas, "01");
+            saveData("Homem-Aranha: Sem Volta para Casa", "b.jpg", cinemas, "02", "03", "04");
+            saveData("Resident Evil: Bem-vindo a Raccoon City", "c.jpg", cinemas, "04");
+            saveData("Eternos", "d.jpg", cinemas, "06");
             
         };
     }
@@ -47,9 +49,13 @@ public class Loader {
             
             cinema.setScreens(new HashSet<Screen>());
             cinema.getScreens().add( new Screen(cinema, "Screen 01", 15, 25) );
-            cinema.getScreens().add( new Screen(cinema, "Screen 02", 10, 20) );
+            cinema.getScreens().add( new Screen(cinema, "Screen 02", 20, 20) );
             cinema.getScreens().add( new Screen(cinema, "Screen 03", 10, 20) );
             cinema.getScreens().add( new Screen(cinema, "Screen 04", 10, 20) );
+            cinema.getScreens().add( new Screen(cinema, "Screen 05", 15, 20) );
+            cinema.getScreens().add( new Screen(cinema, "Screen 06", 10, 25) );
+            
+            cinemaRepository.save(cinema);
             
             returnList.add(cinema);
         }        
@@ -57,14 +63,23 @@ public class Loader {
         return returnList;
     }
 
-    private void saveData(String name, String image, Cinema cinema) {
+    private void saveData(String name, String image, List<Cinema> cinemas, String... screenNames) {
         Movie movie = new Movie(name, image);
         movieRepository.save(movie);
         
         
-        Iterator<Screen> iterator = cinema.getScreens().iterator();
-        for (String time : Arrays.asList("12:00", "15:00", "18:00", "21:00")) {
-            showingRepository.save(new Showing(iterator.next(), time));
+        for ( Cinema cinema : cinemas ) {
+            for (String time : Arrays.asList("12:00", "15:00", "18:00", "21:00")) {
+                for ( String screenIdx : screenNames ) {
+                    //Finde the screen By name
+                    Screen screen = cinema.getScreens()
+                            .stream()
+                            .filter( x -> x.getName().contains(screenIdx) )
+                            .collect(Collectors.toList())
+                            .iterator().next();
+                    showingRepository.save(new Showing(screen, movie, time));                    
+                }
+            }
         }
         
     }

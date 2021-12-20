@@ -10,7 +10,8 @@ a:link, a:visited,  a:hover, a:active
 	height:200px
 }
 .movie-label{
-	font: 12px verdana;
+	font-family: 'Proxima Nova Bold';
+	font-size: 12px;
 }
 .movie-card {
 	margin-top: 10px;
@@ -34,4 +35,72 @@ a:link, a:visited,  a:hover, a:active
 }
 .date-available{
 	text-align: center;
+}
+
+div.cinema-screen {
+	width: 100%;
+	background-color: #252525;
+	padding: 15px;
+	margin-top: 10px;
+}
+
+div.cinema-screen > .name {
+	color:#09f;
+	font-size: 25px;
+}
+
+
+div.cinema-screen > .address {
+	color:#979797;
+	font-size: 1em;
+}
+
+div.cinema-screen > .line {
+	color:#979797;
+}
+div.cinema-screen > .item {
+	margin-bottom: 1em;
+}
+div.cinema-screen > .item > .screen {
+	color:#fff;
+	font-size: 1.5em;
+	font-weight: bold;
+}
+div.cinema-screen > .item > .d-flex > .time {
+	color:#09f;
+	padding: 0.5em 2em !important;
+	margin: 0px 5px;
+	border: 2px solid #09f;
+}
+
+a.seat {
+	width:25px;
+	height:25px;
+	border-radius: 10px;
+	font-size: 9px;
+	margin:3px;
+	padding:4px;
+	font-weight: bold;
+	background-color:#3478c1;
+	color:#3478c1;
+	text-decoration:none;
+}
+a.seat:hover {
+	background-color:#ff7300;
+	color:#fff;
+}
+
+.seat-container {
+	width: 100%;
+	margin:auto;
+	border:1px inset gray;
+}
+
+.screen-display{
+	height:40px;
+	text-align: center;
+	color: #fff;
+	width:80%;
+	margin:auto;
+	background-color: #0e2c4c;	
 }

@@ -43,6 +43,11 @@ public class Movie {
     }
     public void setImageName(String imageName) {
         this.imageName = imageName;
+    }
+
+    @Override
+    public String toString() {
+        return "("+this.id+"): " + this.name;
     }	
 
 }
