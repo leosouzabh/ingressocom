@@ -4,42 +4,37 @@
 
 	<body>
 		<div layout:fragment="content">
+			
 			<div class="dates-container">
 				<table  class="dates-bar">
 					<tr>
 						<td th:each="date : ${dates.list}">
 							<div class="date-available">
-								<a th:href="@{/checkout(date=${date.dayMonth}, movie=${movie.id})}" th:class="${date.active ? 'date-active' : 'date'}">
+								<a th:href="@{/movie/{movie}/{date}(date=${date.dateUrl}, movie=${movie.code})}" th:class="${date.active ? 'date-active' : 'date'}">
 									<div th:text="${date.dayOfWeek}">Wed</div>
 									<div th:text="${date.dayMonth}">12/12</div>
 								</a>
 							</div>
 						</td>
-					</tr>		
-					
-					
-					
-				</table>
-				
-				<!-- screenAndTimes 
-				<tr th:each="instance : ${screenAndTimes.instanceMap}">
-				    <td th:text="${instance.key}">keyvalue</td>
-				    <td th:text="${instance.value.numOfData}">num</td>
-				</tr>
-				-->
-				
+					</tr>
+				</table>				
 			</div>
+			
+			
 			<div class="cinema-screen" th:each="cinema : ${screenAndTimes}">
 				<div th:text="${cinema.key.name}" class="name">Cinema Name</div>
-				<div class="address">Cinema Address</div>
+				<div class="address">
+					<span th:text="${cinema.key.address}">Cinema Name</span>	
+				</div>
 				<hr class="line" size="4"/>
 				
 				<div class="item" th:each="screen : ${cinema.value}">
 					<div th:text="${screen.key.name}" class="screen">Screen 01</div>
 					<div class="d-flex justify-content-start">
-						<div th:each="showing : ${screen.value}" class="p-2 time">
-							<a th:href="@{/checkout/seat(showing=${showing.id}, date=${param.date})}" style="color:#09f">
-								<span th:text="${showing.time}">10:00</span>
+						<div th:each="showing : ${screen.value}" class="p-2" th:showing="${showing.id}" th:class="${showing.full eq true ? 'time-disabled' : 'time'}">
+							<a th:class="${showing.full eq true ? 'time-disabled' : 'time'}" 
+								th:href="@{/movie/{movie}/{date}/seat?showing={showing}(movie=${movie.code}, date=${dates.activeDate.dateUrl}, showing=${showing.id})}">
+								<span th:text="${#temporals.format(showing.datetime, 'HH:mm')}">10:00</span>
 							</a>
 						</div>
 					</div>

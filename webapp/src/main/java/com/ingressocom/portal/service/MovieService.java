@@ -23,4 +23,8 @@ public class MovieService {
         return movieRepository.findById(id);
     }
 
+    public Optional<Movie> findByCode(String code) {
+        return movieRepository.findByCode(code);
+    }
+
 }

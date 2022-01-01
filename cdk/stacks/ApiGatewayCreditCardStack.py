@@ -1,13 +1,9 @@
-from pprint import pprint
 from aws_cdk import (
     core as cdk,
     aws_apigateway as apigateway,
     aws_lambda as _lambda,
     aws_ssm as ssm
 )
-
-from os import path
-import json
 
 class ApiGatewayCreditCardStack(cdk.Stack):
 

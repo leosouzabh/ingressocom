@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+	
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+
+			<div class="movie-card col-2" th:each="movie : ${movies}">
+				<a th:movie="${movie.code}" th:href="@{/movie/{movie}/(movie=${movie.code})}" class="movie-card"> 
+					<img th:src="@{/thumb/} + ${movie.imageName}" class="movie-thumb" />
+					<br />
+					<span th:text=${movie.name} class="movie-label"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

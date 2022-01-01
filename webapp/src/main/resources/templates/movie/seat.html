@@ -17,9 +17,12 @@
 							
 							<div class="screen-display">Screen</div>
 							<br/><br/>						
-							<div th:each="i : ${#numbers.sequence(1, showing.screen.totalRow)}" class="d-flex justify-content-center">	
-							 	<a th:each="i2 : ${#numbers.sequence(1, showing.screen.totalCol)}" class="seat"
-							 		th:text="${showing.convertPosition(i)} + ${i2}"></a>
+							<div th:each="i : ${#numbers.sequence(1, showing.screen.totalRow)}" class="d-flex justify-content-center">
+							 	<a th:href="@{/payment/init(showing=${showing.id}, seat=${showing.convertPosition(i)} + ${i2})}"
+							 		th:each="i2 : ${#numbers.sequence(1, showing.screen.totalCol)}" 
+							 		th:classappend="${unavailableSeats.contains(showing.convertPosition(i) + i2) ? 'seat-disabled' : 'seat'}"
+									th:text="${showing.convertPosition(i)} + ${i2}"
+							 		th:seat="${showing.convertPosition(i)} + ${i2}"></a>
 							 	
 							</div>
 							

@@ -1,28 +1,27 @@
 package com.ingressocom.portal.pojo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class DayWeek {
 
-    private Date date;
-    private SimpleDateFormat dayFormat;
-    private SimpleDateFormat dateFormat;
+    private LocalDate date;
+    private DateTimeFormatter dayFormat;
+    private DateTimeFormatter dateFormat;
+    private DateTimeFormatter dateFormatUrl;
     private boolean active;
     
-    public DayWeek(Date date, String activeDateStr) {
+    public DayWeek(LocalDate date, LocalDate activeDate) {
         super();
         this.date = date;
-        this.dayFormat = new SimpleDateFormat("EEE");
-        this.dateFormat = new SimpleDateFormat("dd/MM");
+        this.dayFormat = DateTimeFormatter.ofPattern("EEE");
+        this.dateFormat = DateTimeFormatter.ofPattern("dd/MMM");
+        this.dateFormatUrl = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         
-        activeDateStr = activeDateStr == null ? 
-                dateFormat.format(new Date()) : activeDateStr;
-                
-        this.active = getDayMonth().equals(activeDateStr);
+        this.active = getDateUrl().equals(dateFormatUrl.format(activeDate));
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
     
@@ -32,6 +31,9 @@ public class DayWeek {
     
     public String getDayMonth() {
         return dateFormat.format(date);
+    }
+    public String getDateUrl() {
+        return dateFormatUrl.format(date);
     }
 
     public boolean isActive() {

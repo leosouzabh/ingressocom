@@ -57,6 +57,9 @@ public class Screen {
     public void setCinema(Cinema cinema) {
         this.cinema = cinema;
     }
+    public Integer getTotalSeats() {
+        return totalRow * totalCol;
+    }
     @Override
     public String toString() {
         return "SCREEN=["+this.getName()+"]";

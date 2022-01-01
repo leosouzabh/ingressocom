@@ -66,26 +66,53 @@ div.cinema-screen > .item > .screen {
 	font-size: 1.5em;
 	font-weight: bold;
 }
-div.cinema-screen > .item > .d-flex > .time {
+div.time {
 	color:#09f;
 	padding: 0.5em 2em !important;
 	margin: 0px 5px;
 	border: 2px solid #09f;
 }
+a.time {
+	color:#09f;
+}
+div.time-disabled {
+	color:#464646;
+	padding: 0.5em 2em !important;
+	margin: 0px 5px;
+	border: 2px solid #464646;
+}
+a.time-disabled {
+	color:#464646;
+}
 
 a.seat {
-	width:25px;
-	height:25px;
+	width:20px;
+	height:20px;
 	border-radius: 10px;
 	font-size: 9px;
-	margin:3px;
-	padding:4px;
+	margin:2px;
+	padding:2px;
 	font-weight: bold;
 	background-color:#3478c1;
 	color:#3478c1;
 	text-decoration:none;
 }
+a.seat-disabled {
+	width:20px;
+	height:20px;
+	border-radius: 10px;
+	font-size: 9px;
+	margin:2px;
+	padding:2px;
+	font-weight: bold;
+	background-color:gray;
+	color:#3478c1;
+	text-decoration:none;
+	color:#fff;
+	cursor: not-allowed;
+}
 a.seat:hover {
+	background-color:#ff7300;
 	background-color:#ff7300;
 	color:#fff;
 }

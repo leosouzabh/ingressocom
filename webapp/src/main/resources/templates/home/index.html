@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 
-<html layout:decorate="~{layout}">
+<html layout:decorate="~{layout-nocontainer}">
 	
 <body>
 	<div layout:fragment="content">
-		<div class="row">
-			<div class="movie-card col-2" th:each="movie : ${movies}">
-				<a th:href="@{/checkout(movie=${movie.id})}"> 
-					<img th:src="@{/thumb/} + ${movie.imageName}" class="movie-thumb" />
-					<br />
-					<span th:text=${movie.name} class="movie-label"></span>
-				</a>
+		
+		<div style="background-color: #f1f1f1; margin-top:200px; padding:50px">
+			<div class="container">
+			
+				<form role="form" action="#" th:action="@{/home/state}" th:object="${stateForm}" method="post">
+					<div class="form-group">
+					    <label for="exampleInputEmail1">Select your state</label>
+					    <select class="form-control col-form-label-lg" th:field="*{stateId}">
+				            <option value=""></option>
+				            <option th:stateId="${st.id}" th:state="${st.abbreviation}" th:each="st : ${stateList}"
+				            	th:value="${st.id}" th:text="${st.name+' - ('+st.abbreviation+')'}"></option>
+					    </select>
+				  	</div>
+				  	<br/>
+					<button style="float:right" type="submit" class="btn btn-outline-primary">Go -></button>
+				</form>			
+			
 			</div>
 		</div>
+		
 	</div>
 </body>
 
