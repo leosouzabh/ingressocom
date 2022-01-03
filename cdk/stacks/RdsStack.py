@@ -4,9 +4,10 @@ from aws_cdk import (
     core 
 )
 
-class CommonStack(core.Stack):
+class RdsStack(core.Stack):
     def __init__(self, scope: core.Construct, deploy_env, **kwargs) -> None:
         self.deploy_env = deploy_env
+        self.rds_port = 5432
         super().__init__(scope, id=f"{self.deploy_env}-network-stack", **kwargs)
 
         self.custom_vpc = ec2.Vpc(self, f"vpc-{self.deploy_env}")
@@ -20,13 +21,13 @@ class CommonStack(core.Stack):
 
         #Opening the Security Group to everyone
         self.orders_rds_sg.add_ingress_rule(
-            peer=ec2.Peer.ipv4("0.0.0.0/0"), connection=ec2.Port.tcp(5432)
+            peer=ec2.Peer.ipv4("0.0.0.0/0"), connection=ec2.Port.tcp(self.rds_port)
         )
 
         #Opening the RDS to all from the private subnet
         for subnet in self.custom_vpc.private_subnets:
             self.orders_rds_sg.add_ingress_rule(
-                peer=ec2.Peer.ipv4(subnet.ipv4_cidr_block), connection=ec2.Port.tcp(5432)
+                peer=ec2.Peer.ipv4(subnet.ipv4_cidr_block), connection=ec2.Port.tcp(self.rds_port)
             )
 
         self.orders_rds_parameter_group = rds.ParameterGroup(
@@ -47,7 +48,7 @@ class CommonStack(core.Stack):
             instance_type=ec2.InstanceType("t3.micro"),
             vpc=self.custom_vpc,
             instance_identifier=f"rds-{self.deploy_env}-orders-db",
-            port=5432,
+            port=self.rds_port,
             vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
             subnet_group=rds.SubnetGroup(
                 self,
