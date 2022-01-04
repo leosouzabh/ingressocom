@@ -12,12 +12,20 @@ function makeid(length) {
     return result;
 }
 
+function sleep(seconds) 
+{
+  var e = new Date().getTime() + (seconds * 1000);
+  while (new Date().getTime() <= e) {}
+}
+
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });
 
 app.post("/payment", (req, res, next) => {
     console.info(req.body);
+
+    sleep(5);
     res.json(
         {
             hash: makeid(40)
