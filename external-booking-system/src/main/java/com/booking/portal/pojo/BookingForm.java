@@ -4,6 +4,7 @@ public class BookingForm {
 
     private String seat;
     private String hash;
+    private Integer delay;
     
     public String getHash() {
         return hash;
@@ -17,6 +18,13 @@ public class BookingForm {
     }
     public void setSeat(String seat) {
         this.seat = seat;
+    }
+
+    public Integer getDelay() {
+        return delay == null ? 3 : delay;
+    }
+    public void setDelay(Integer delay) {
+        this.delay = delay;
     }
 
 }

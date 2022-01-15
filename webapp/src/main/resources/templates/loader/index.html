@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html layout:decorate="~{layout}">
+	
+<body>
+	<div layout:fragment="content">
+		
+
+
+        <form role="form" action="#" th:action="@{/loader/load}" method="post" th:if="${!dataLoaded}">
+            <button class="btn btn-primary">Load data</button>
+        </form>
+
+
+    </div>    
+</body>
+
+</html>

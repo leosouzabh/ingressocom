@@ -4,12 +4,15 @@ from aws_cdk import (
     aws_elasticbeanstalk as elasticbeanstalk,
     aws_iam as iam
 )
-
+from stacks.RdsStack import RdsStack
 from os import path
 
 class WebappStack(cdk.Stack):
 
-    def __init__(self, scope: cdk.Construct, deploy_env: str, payment_service_url: str, **kwargs) -> None:
+
+    def __init__(self, scope: cdk.Construct, deploy_env: str, payment_service_url: str, 
+        booking_service_host: str, rds_stack: RdsStack, **kwargs) -> None:
+
         self.deploy_env = deploy_env
         self.app_name = f"{deploy_env}-portal"
         super().__init__(scope, f"{self.app_name}-webapp", **kwargs)
@@ -21,7 +24,7 @@ class WebappStack(cdk.Stack):
 
         app = elasticbeanstalk.CfnApplication(self, 'Application',
             application_name= self.app_name,
-        );
+        )
 
         app_version_props = elasticbeanstalk.CfnApplicationVersion(self, f'{self.deploy_env}-AppVersion', 
             application_name=app.application_name,
@@ -31,7 +34,7 @@ class WebappStack(cdk.Stack):
             ),
             # the properties below are optional
             description="description"
-        );
+        )
 
         app_version_props.add_depends_on(app)
 
@@ -39,11 +42,11 @@ class WebappStack(cdk.Stack):
         #Create role and instance profile
         myRole = iam.Role(self, f"{self.app_name}-aws-elasticbeanstalk-ec2-role", 
             assumed_by = iam.ServicePrincipal('ec2.amazonaws.com'),
-        );
+        )
     
         myRole.add_managed_policy(
             iam.ManagedPolicy.from_aws_managed_policy_name('AWSElasticBeanstalkWebTier')
-        );
+        )
 
         my_profile_name = f"{self.app_name}-InstanceProfile"
 
@@ -52,7 +55,7 @@ class WebappStack(cdk.Stack):
             roles = [
                 myRole.role_name
             ]
-        );
+        )
 
         elb_env = elasticbeanstalk.CfnEnvironment(self, f'{self.deploy_env}-Environment', 
             environment_name= f'{self.app_name}-environment',
@@ -79,18 +82,22 @@ class WebappStack(cdk.Stack):
                     option_name="InstanceTypes",
                     value="t2.micro",
                 ),
-                elasticbeanstalk.CfnEnvironment.OptionSettingProperty(
-                    namespace="aws:elasticbeanstalk:application:environment",
-                    option_name="SERVER_PORT",
-                    value="5000",
-                ),
-                elasticbeanstalk.CfnEnvironment.OptionSettingProperty(
-                    namespace="aws:elasticbeanstalk:application:environment",
-                    option_name="PAYMENT_SERVICE_URL",
-                    value=payment_service_url,
-                )
+                self.get_env_var_option("SERVER_PORT", "5000"),
+                self.get_env_var_option("PAYMENT_GATEWAY_ENDPOINT", payment_service_url),
+                self.get_env_var_option("EXTERNAL_BOOKING_ENDPOINT", f"http://{booking_service_host}/booking"),
+
+                self.get_env_var_option("SPRING_DATASOURCE_URL", rds_stack.jdbc_url),
+                self.get_env_var_option("SPRING_DATASOURCE_USERNAME", rds_stack.secret_username),
+                self.get_env_var_option("SPRING_DATASOURCE_PASSWORD", rds_stack.secret_password)
             ],
             version_label= app_version_props.ref,
-        );
+        )
 
+    def get_env_var_option(self, environment_name: str, environment_value: str) -> elasticbeanstalk.CfnEnvironment.OptionSettingProperty:
+
+        return elasticbeanstalk.CfnEnvironment.OptionSettingProperty(
+            namespace="aws:elasticbeanstalk:application:environment",
+            option_name=environment_name,
+            value=environment_value
+        )        
 

@@ -12,5 +12,7 @@ public interface MovieRepository extends CrudRepository<Movie, Long> {
 
     @Query("from Movie m where m.code = :movieCode")
     Optional<Movie> findByCode(@Param("movieCode") String movieCode);    
-    
+
+    @Query("SELECT COUNT(m) FROM Movie m")
+    long findTotalMovie();
 }
