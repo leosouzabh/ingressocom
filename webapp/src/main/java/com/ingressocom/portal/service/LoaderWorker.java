@@ -31,7 +31,7 @@ public class LoaderWorker {
     @Async
     public CompletableFuture<Void> addShowing(
             String name, String image, List<Cinema> cinemas,
-            LocalDateTime exhibitionStart, LocalDateTime exhibitionEnd, String... screenNames)
+            LocalDateTime exhibitionStart, LocalDateTime exhibitionEnd, List<String> screenNames)
             throws InterruptedException {
 
         logger.info("Loader step: Adding movie: " + name);

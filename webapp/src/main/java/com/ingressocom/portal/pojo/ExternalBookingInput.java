@@ -7,6 +7,7 @@ public class ExternalBookingInput {
     private String cinema;
     private String screen;
     private String movie;
+    private String seat;
     private String httpSessionId;
     private LocalDateTime datetime;
     
@@ -40,7 +41,12 @@ public class ExternalBookingInput {
     public void setHttpSessionId(String httpSessionId) {
         this.httpSessionId = httpSessionId;
     }
-    
+    public String getSeat() {
+        return seat;
+    }
+    public void setSeat(String seat) {
+        this.seat = seat;
+    }
     
     
 }

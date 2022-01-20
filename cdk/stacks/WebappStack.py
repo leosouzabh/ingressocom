@@ -85,7 +85,7 @@ class WebappStack(cdk.Stack):
                 self.get_env_var_option("SERVER_PORT", "5000"),
                 self.get_env_var_option("PAYMENT_GATEWAY_ENDPOINT", payment_service_url),
                 self.get_env_var_option("EXTERNAL_BOOKING_ENDPOINT", f"http://{booking_service_host}/booking"),
-
+                self.get_env_var_option("SPRING_PROFILES_ACTIVE", "aws"),
                 self.get_env_var_option("SPRING_DATASOURCE_URL", rds_stack.jdbc_url),
                 self.get_env_var_option("SPRING_DATASOURCE_USERNAME", rds_stack.secret_username),
                 self.get_env_var_option("SPRING_DATASOURCE_PASSWORD", rds_stack.secret_password)

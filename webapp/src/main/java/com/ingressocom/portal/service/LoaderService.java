@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.ingressocom.portal.model.Cinema;
 import com.ingressocom.portal.model.Screen;
 import com.ingressocom.portal.model.State;
+import com.ingressocom.portal.pojo.MovieLoader;
 import com.ingressocom.portal.repository.CinemaRepository;
 import com.ingressocom.portal.repository.MovieRepository;
 import com.ingressocom.portal.repository.ShowingRepository;
@@ -31,35 +32,10 @@ public class LoaderService {
     @Autowired ShowingRepository showingRepository;
     @Autowired StateRepository stateRepository;
     @Autowired LoaderWorker loaderWorker;
-    
+    @Autowired LoaderDataComponent loaderData;
+
     Logger logger = LoggerFactory.getLogger(LoaderService.class);
 
-    
-    private List<String[]> statesStr = Arrays.asList(
-            new String[] {"Sacramento", "California", "CA"},
-            new String[] {"Los Angeles", "California", "CA"},
-            new String[] {"San Francisco", "California", "CA"},
-            new String[] {"San Diego", "California", "CA"},
-            new String[] {"California City", "California", "CA"},
-            new String[] {"Denver", "Colorado", "CO"},
-            new String[] {"1", "Florida", "FL"},
-            new String[] {"1", "Georgia", "GA"},
-            new String[] {"1", "Massachusetts", "MA"},
-            new String[] {"1", "Nevada", "NV"},
-            new String[] {"1", "New Jersey", "NJ"},
-            new String[] {"1", "New York", "NY"},
-            new String[] {"1", "Washington", "WA"});
-    
-    private List<String> cinemas = Arrays.asList(
-            "AMC North"
-            ,"AMC South", "AMC CityCenter", "AMC West", "AMC Shopping Center",  "AMC East",
-            "Cineworld North", "Cineworld South", "Cineworld CityCenter", "Cineworld West", "Cineworld Shopping Center",  "Cineworld East",
-            "Cineplex North", "Cineplex South", "Cineplex CityCenter", "Cineplex West", "Cineplex Shopping Center",  "Cineplex East",
-            "Landmark North", "Landmark South", "Landmark CityCenter", "Landmark West", "Landmark Shopping Center",  "Landmark East",
-            "CMX North", "CMX South", "CMX CityCenter", "CMX West", "CMX Shopping Center",  "CMX East"
-            );
-        
-    
     public boolean loadData() {
         boolean dataLoaded = false;
         if ( ! isDataLoaded() ) {
@@ -88,20 +64,23 @@ public class LoaderService {
         LocalDateTime exhibitionStart = LocalDateTime.now();
         LocalDateTime exhibitionEnd = LocalDateTime.now().plusDays(15);
 
-        CompletableFuture<Void> moviaA = loaderWorker.addShowing("Clifford the Big Red Dog", "a.jpg", cinemas, exhibitionStart, exhibitionEnd, "01");
-        CompletableFuture<Void> moviaB = loaderWorker.addShowing("Spiderman: No Way Home", "b.jpg", cinemas, exhibitionStart, exhibitionEnd, "02", "03", "04", "05");
-        CompletableFuture<Void> moviaC = loaderWorker.addShowing("Resident Evil: Welcome to Raccoon City", "c.jpg", cinemas, exhibitionStart, exhibitionEnd, "06");
-        CompletableFuture<Void> moviaD = loaderWorker.addShowing("Ethernal", "d.jpg", cinemas, exhibitionStart, exhibitionEnd, "07");            
-        CompletableFuture<Void> moviaE = loaderWorker.addShowing("Matrix", "k.jpg", cinemas, exhibitionStart, exhibitionEnd, "08");
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
 
-        CompletableFuture.allOf(moviaA, moviaB, moviaC, moviaD, moviaE).join();
+        for( MovieLoader movieLoader : loaderData.getMovies() ){
+            CompletableFuture<Void> future = loaderWorker.addShowing(movieLoader.getMovie(), movieLoader.getImage(), 
+                cinemas, exhibitionStart, exhibitionEnd, movieLoader.getScreens());
+            futures.add(future);
+        }
+
+        CompletableFuture<Void>[] futureArray =  futures.stream().toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(futureArray).join();
     }
 
     
 
     private Map<String, State> saveStates() {
         Map<String, State> mapReturn = new HashMap<String, State>();
-        statesStr.stream()
+        loaderData.getStates().stream()
             .map( stateArr -> new State(stateArr[1], stateArr[2]) )
             .collect(Collectors.toSet())
             .forEach( state -> {
@@ -113,9 +92,9 @@ public class LoaderService {
 
     private List<Cinema> saveCinema(Map<String, State> states) {
         List<Cinema> returnList = new ArrayList<Cinema>();
-        for ( String[] stateStr : statesStr ) {
+        for ( String[] stateStr : loaderData.getStates() ) {
             
-            for (String cinemaName : cinemas) {
+            for (String cinemaName : loaderData.getCinemas()) {
                 Cinema cinema = new Cinema();
                 cinema.setName(cinemaName);
                 cinema.setCode(sanitize(cinemaName));

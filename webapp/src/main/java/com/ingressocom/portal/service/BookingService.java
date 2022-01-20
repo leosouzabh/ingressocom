@@ -37,6 +37,7 @@ public class BookingService {
         input.setCinema(showing.getScreen().getCinema().getName());
         input.setScreen(showing.getScreen().getName());
         input.setMovie(showing.getMovie().getName());
+        input.setSeat(seat);
         input.setDatetime(LocalDateTime.now());
         input.setHttpSessionId(httpSessionId);
         
