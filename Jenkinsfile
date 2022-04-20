@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                sh 'echo checkout from a TAG'
+                sh 'echo checkout from MAIN branch'
             }
         }
         stage('build') {
